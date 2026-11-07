@@ -1,8 +1,10 @@
-# Express.js REST API - Daftar Produk
+# Express.js REST API Produk dengan Prisma ORM
 
-Tugas Praktikum Pemrograman Web (Week 9: Materi ExpressJS) - Institut Teknologi Sepuluh Nopember (ITS).
+Proyek ini merupakan implementasi RESTful API untuk mengelola data produk menggunakan **Express.js** dan **Prisma ORM** dengan database engine **SQLite**. Proyek menerapkan pemisahan tanggung jawab (*separation of concerns*) dengan membagi kode ke dalam lapisan *routes*, *controllers*, dan *database models*.
 
-Proyek ini mengimplementasikan RESTful API sederhana menggunakan **Express.js** untuk mengelola data produk menggunakan penyimpanan memori (*in-memory array*, tanpa database). Arsitektur proyek telah menerapkan prinsip pemisahan tanggung jawab (**separation of concerns**) dengan memisahkan *routes* dan *controllers*.
+- **Nama:** Muhammad Rifqi Fathurrahman
+- **NRP:** 5027251029
+- **Mata Kuliah:** Pemrograman Web (Week 10: Integrasi Prisma ORM)
 
 ---
 
@@ -11,16 +13,24 @@ Proyek ini mengimplementasikan RESTful API sederhana menggunakan **Express.js** 
 ```text
 express-products-api/
 ├── controllers/
-│   └── productController.js   # Logika bisnis (handling request & response)
-├── data/
-│   └── products.js            # Data awal in-memory array produk
+│   └── productController.js   # Logika bisnis & manipulasi database via Prisma
+├── lib/
+│   └── prisma.js              # Instance Prisma Client singleton
+├── prisma/
+│   ├── dev.db                 # Database SQLite (dibuat otomatis oleh Prisma)
+│   ├── schema.prisma          # Skema model Prisma (Model Product)
+│   └── seed.js                # Script seeding data awal (Buku & Pulpen)
 ├── routes/
-│   └── productRoutes.js       # Pemetaan rute HTTP ke controller
-├── app.js                     # Konfigurasi aplikasi Express & middleware
-├── index.js                   # Entry point server (listen ke port)
-├── package.json               # Konfigurasi dependensi dan script npm
-├── test.js                    # Script pengujian otomatis seluruh skenario
-└── README.md                  # Dokumentasi proyek & bukti pengujian
+│   └── productRoutes.js       # Pemetaan rute HTTP (GET, POST, PUT, DELETE)
+├── evidence/                  # Bukti screenshot pengujian Postman & Database
+├── scripts/
+│   └── generate_evidence.py   # Script otomasi pembuatan gambar evidence
+├── app.js                     # Inisialisasi Express & middleware
+├── index.js                   # Entry point server (Port 3000)
+├── test.js                    # Script pengujian otomatis 12 skenario pengujian
+├── LAPORAN_EVIDENCE.md        # Laporan lengkap hasil pengujian & bukti gambar
+├── package.json               # Dependensi & script NPM
+└── .env.example               # Contoh konfigurasi environment variables
 ```
 
 ---
@@ -32,18 +42,50 @@ express-products-api/
 - **npm**
 
 ### 2. Instalasi Dependensi
-Buka terminal dan masuk ke folder proyek:
 ```bash
-cd express-products-api
 npm install
 ```
 
-### 3. Menjalankan Server
-Jalankan perintah:
+### 3. Konfigurasi Environment Variables
+Salin file konfigurasi environment:
+```bash
+cp .env.example .env
+```
+Isi file `.env`:
+```env
+DATABASE_URL="file:./dev.db"
+PORT=3000
+```
+
+### 4. Sinkronisasi Database & Seeding
+Jalankan perintah berikut untuk mensinkronisasi schema ke database dan mengisi data awal:
+```bash
+# Push schema Prisma ke database SQLite
+npx prisma db push
+
+# Generate Prisma Client
+npx prisma generate
+
+# Seed data awal (ID 1: Buku, ID 2: Pulpen)
+npm run seed
+```
+
+### 5. Menjalankan Server
 ```bash
 npm start
 ```
-Server akan aktif di: `http://localhost:3000`
+Server akan aktif di `http://localhost:3000`.
+
+### 6. Menjalankan Prisma Studio (Database GUI)
+Untuk melihat dan mengelola data langsung di antarmuka browser:
+```bash
+npm run studio
+```
+
+### 7. Menjalankan Pengujian Otomatis
+```bash
+npm test
+```
 
 ---
 
@@ -51,177 +93,106 @@ Server akan aktif di: `http://localhost:3000`
 
 | No | Metode | Endpoint | Deskripsi | Status Code |
 |---|---|---|---|---|
-| 1 | `GET` | `/products` | Mengambil seluruh data produk | `200 OK` |
-| 2 | `GET` | `/products/:id` | Mengambil data produk berdasarkan ID | `200 OK` (jika ada) / `404 Not Found` |
-| 3 | `POST` | `/products` | Menambahkan produk baru | `201 Created` |
+| 1 | `GET` | `/products` | Menampilkan seluruh data produk | `200 OK` |
+| 2 | `GET` | `/products/:id` | Mengambil data produk berdasarkan ID | `200 OK` / `404 Not Found` |
+| 3 | `POST` | `/products` | Membuat data produk baru | `201 Created` / `400 Bad Request` |
+| 4 | `PUT` | `/products` | Mengupdate produk (Body sama dg POST + ID) | `200 OK` / `400 Bad Request` / `404 Not Found` |
+| 5 | `PUT` | `/products/:id` | Mengupdate produk melalui parameter ID | `200 OK` / `400 Bad Request` / `404 Not Found` |
+| 6 | `DELETE` | `/products/:id` | Menghapus data produk berdasarkan ID | `200 OK` / `404 Not Found` |
 
 ---
 
-## 📝 Detail & Contoh Request/Response
+## 📝 Format Request & Response
 
 ### 1. GET `/products`
-- **Tujuan**: Mengambil array semua produk.
-- **Request**:
+- **Request:**
   ```bash
   curl -X GET http://localhost:3000/products
   ```
-- **Response** (`200 OK`):
+- **Response (`200 OK`):**
   ```json
   [
     {
       "id": 1,
       "name": "Buku",
-      "price": 15000
+      "price": 15000,
+      "createdAt": "2026-11-07T08:19:42.447Z",
+      "updatedAt": "2026-11-07T08:19:42.447Z"
     },
     {
       "id": 2,
       "name": "Pulpen",
-      "price": 5000
+      "price": 5000,
+      "createdAt": "2026-11-07T08:19:42.447Z",
+      "updatedAt": "2026-11-07T08:19:42.447Z"
     }
   ]
   ```
 
 ---
 
-### 2. GET `/products/:id` (Ditemukan)
-- **Tujuan**: Mengambil produk dengan ID tertentu.
-- **Request**:
-  ```bash
-  curl -X GET http://localhost:3000/products/1
-  ```
-- **Response** (`200 OK`):
-  ```json
-  {
-    "id": 1,
-    "name": "Buku",
-    "price": 15000
-  }
-  ```
-
----
-
-### 3. GET `/products/:id` (Tidak Ditemukan)
-- **Tujuan**: Menguji penanganan ketika produk tidak tersedia.
-- **Request**:
-  ```bash
-  curl -X GET http://localhost:3000/products/999
-  ```
-- **Response** (`404 Not Found`):
-  ```json
-  {
-    "message": "Produk tidak ditemukan"
-  }
-  ```
-
----
-
-### 4. POST `/products`
-- **Tujuan**: Menambahkan produk baru dengan ID otomatis.
-- **Request**:
+### 2. POST `/products`
+- **Request:**
   ```bash
   curl -X POST http://localhost:3000/products \
     -H "Content-Type: application/json" \
     -d '{"name": "Penggaris", "price": 3000}'
   ```
-- **Response** (`201 Created`):
+- **Response (`201 Created`):**
   ```json
   {
     "id": 3,
     "name": "Penggaris",
-    "price": 3000
+    "price": 3000,
+    "createdAt": "2026-11-07T08:19:42.486Z",
+    "updatedAt": "2026-11-07T08:19:42.486Z"
   }
   ```
 
 ---
 
-## 🧪 Bukti Pengujian
-
-Pengujian dapat dijalankan secara otomatis menggunakan:
-```bash
-npm test
-```
-
-### Log Output Pengujian Terminal:
-```text
-> express-products-api@1.0.0 test
-> node test.js
-
-Test server running on port 3001
-
-==============================================
-1. Uji GET /products
-==============================================
-HTTP Status: 200
-Response JSON:
-[
+### 3. PUT `/products` (Body Sama dengan POST namun ada Tambahan ID)
+- **Request:**
+  ```bash
+  curl -X PUT http://localhost:3000/products \
+    -H "Content-Type: application/json" \
+    -d '{"id": 1, "name": "Buku Tulis Sinar Dunia", "price": 18000}'
+  ```
+- **Response (`200 OK`):**
+  ```json
   {
     "id": 1,
-    "name": "Buku",
-    "price": 15000
-  },
-  {
-    "id": 2,
-    "name": "Pulpen",
-    "price": 5000
+    "name": "Buku Tulis Sinar Dunia",
+    "price": 18000,
+    "createdAt": "2026-11-07T08:19:42.447Z",
+    "updatedAt": "2026-11-07T08:19:42.490Z"
   }
-]
+  ```
 
-==============================================
-2. Uji GET /products/1
-==============================================
-HTTP Status: 200
-Response JSON:
-{
-  "id": 1,
-  "name": "Buku",
-  "price": 15000
-}
+---
 
-==============================================
-3. Uji GET /products/999
-==============================================
-HTTP Status: 404
-Response JSON:
-{
-  "message": "Produk tidak ditemukan"
-}
-
-==============================================
-4. Uji POST /products
-==============================================
-Request Body: {"name":"Penggaris","price":3000}
-HTTP Status: 201
-Response JSON:
-{
-  "id": 3,
-  "name": "Penggaris",
-  "price": 3000
-}
-
-==============================================
-5. Uji GET /products setelah POST (Verifikasi)
-==============================================
-HTTP Status: 200
-Response JSON:
-[
+### 4. DELETE `/products/:id`
+- **Request:**
+  ```bash
+  curl -X DELETE http://localhost:3000/products/2
+  ```
+- **Response (`200 OK`):**
+  ```json
   {
-    "id": 1,
-    "name": "Buku",
-    "price": 15000
-  },
-  {
-    "id": 2,
-    "name": "Pulpen",
-    "price": 5000
-  },
-  {
-    "id": 3,
-    "name": "Penggaris",
-    "price": 3000
+    "message": "Produk berhasil dihapus",
+    "data": {
+      "id": 2,
+      "name": "Pulpen",
+      "price": 5000,
+      "createdAt": "2026-11-07T08:19:42.447Z",
+      "updatedAt": "2026-11-07T08:19:42.447Z"
+    }
   }
-]
+  ```
 
-==============================================
-HASIL PENGUJIAN: SEMUA TARGET BERHASIL TERPENUHI!
-==============================================
-```
+---
+
+## 🧪 Laporan Evidence & Pengujian
+
+Dokumentasi lengkap bukti pengujian API client (Postman/Hoppscotch) dan screenshot perubahan database before-after dapat dilihat pada file:
+👉 **[LAPORAN_EVIDENCE.md](./LAPORAN_EVIDENCE.md)**
