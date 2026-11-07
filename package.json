@@ -1,17 +1,31 @@
 {
   "name": "express-products-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Express.js REST API Produk dengan Prisma ORM & SQLite",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "node test.js"
+    "seed": "node prisma/seed.js",
+    "test": "node test.js",
+    "studio": "prisma studio"
   },
-  "keywords": [],
-  "author": "",
+  "prisma": {
+    "seed": "node prisma/seed.js"
+  },
+  "keywords": [
+    "express",
+    "prisma",
+    "sqlite",
+    "crud",
+    "rest-api"
+  ],
+  "author": "Muhammad Rifqi Fathurrahman",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "express": "^5.3.0"
+    "@prisma/client": "^6.19.3",
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "prisma": "^6.19.3"
   }
 }

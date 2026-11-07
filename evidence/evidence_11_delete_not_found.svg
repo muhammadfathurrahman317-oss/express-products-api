@@ -1,0 +1,23 @@
+<svg width="1000" height="255" viewBox="0 0 1000 255" xmlns="http://www.w3.org/2000/svg">
+<rect width="1000" height="255" rx="12" fill="#0f172a" stroke="#1e293b" stroke-width="1.5"/>
+<path d="M0 12 C0 5.37 5.37 0 12 0 L988 0 C994.63 0 1000 5.37 1000 12 L1000 42 L0 42 Z" fill="#1e293b"/>
+<circle cx="22" cy="21" r="6" fill="#ef4444"/>
+<circle cx="42" cy="21" r="6" fill="#f59e0b"/>
+<circle cx="62" cy="21" r="6" fill="#10b981"/>
+<text x="500" y="26" fill="#cbd5e1" font-family="-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif" font-size="13" font-weight="600" text-anchor="middle">Postman / Hoppscotch API Client — 11. DELETE /products/999 — Menghapus Produk Tidak Ada (404 Not Found)</text>
+<rect x="20" y="54" width="960" height="42" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+<rect x="25" y="59" width="75" height="32" rx="6" fill="#7f1d1d"/>
+<text x="62" y="80" fill="#ef4444" font-family="ui-monospace, Menlo, monospace" font-size="14" font-weight="700" text-anchor="middle">DELETE</text>
+<text x="112" y="80" fill="#f8fafc" font-family="ui-monospace, Menlo, monospace" font-size="14">http://localhost:3000/products/999</text>
+<rect x="890" y="59" width="85" height="32" rx="6" fill="#2563eb"/>
+<text x="933" y="79" fill="#ffffff" font-family="-apple-system, sans-serif" font-size="13" font-weight="600" text-anchor="middle">Send</text>
+<rect x="20" y="108" width="960" height="115" rx="8" fill="#111827" stroke="#1f2937" stroke-width="1"/>
+<text x="35" y="132" fill="#94a3b8" font-family="-apple-system, sans-serif" font-size="12" font-weight="600">RESPONSE BODY</text>
+<rect x="690" y="118" width="124" height="22" rx="4" fill="#450a0a"/>
+<text x="752" y="133" fill="#f87171" font-family="ui-monospace, Menlo, monospace" font-size="11" font-weight="700" text-anchor="middle">404 Not Found</text>
+<text x="820" y="133" fill="#64748b" font-family="-apple-system, sans-serif" font-size="11">Time: <tspan fill="#38bdf8">10 ms</tspan></text>
+<text x="910" y="133" fill="#64748b" font-family="-apple-system, sans-serif" font-size="11">Size: <tspan fill="#38bdf8">68 B</tspan></text>
+<text x="35" y="156" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13"><tspan fill="#94a3b8">{</tspan></text>
+<text x="35" y="176" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13"><tspan fill="#94a3b8">  &quot;message&quot;: &quot;Produk dengan ID 999 tidak ditemukan&quot;</tspan></text>
+<text x="35" y="196" font-family="ui-monospace, Menlo, Consolas, monospace" font-size="13"><tspan fill="#94a3b8">}</tspan></text>
+</svg>
