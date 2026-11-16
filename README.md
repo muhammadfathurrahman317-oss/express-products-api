@@ -4,7 +4,12 @@ Proyek ini merupakan implementasi RESTful API untuk mengelola data produk menggu
 
 - **Nama:** Muhammad Rifqi Fathurrahman
 - **NRP:** 5027251029
-- **Mata Kuliah:** Pemrograman Web (Week 10: Integrasi Prisma ORM)
+- **Mata Kuliah:** Pemrograman Web (Tugas 4: Styling & Integrasi Project React dengan Project ExpressJS)
+
+---
+
+## 🌐 Integrasi Frontend & CORS (Tugas 4)
+Untuk mendukung penugasan Tugas 4 (Integrasi dengan Project Frontend React), API ini telah dilengkapi dengan middleware `cors` yang memungkinkan aplikasi klien (React Vite yang berjalan pada port 5173 atau port lainnya) melakukan operasi HTTP (`GET`, `POST`, `PUT`, `DELETE`) secara mulus tanpa terhalang kebijakan *Cross-Origin Resource Sharing*.
 
 ---
 
