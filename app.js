@@ -1,8 +1,16 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const productRoutes = require('./routes/productRoutes');
 
 const app = express();
+
+// Middleware CORS untuk mengizinkan request dari aplikasi frontend React
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 // Middleware untuk parsing JSON request body
 app.use(express.json());
